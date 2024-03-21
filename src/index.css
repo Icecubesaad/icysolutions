@@ -1,0 +1,182 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+*{
+  margin: 0;
+  padding: 0;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge, and Firefox */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#root{
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: 100% !important;
+  text-align: start !important;
+}
+.main-canvas{
+  background-image: url("/HypercolorGradient5.jpeg");
+  width: 100% !important;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 300vh !important;
+}
+.main-canvas-another{
+  background-image: url("/HypercolorGradient6.jpeg");
+  width: 100% !important;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.header-canvas{
+  background-image: url("/HypercolorGradient6.jpeg");
+  width: 100% !important;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+#blur {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: 2;
+  backdrop-filter: blur(10vmax);
+}
+#blurheader {
+  height: 15vh;
+  width: 100%;
+  position: absolute;
+  z-index: 2;
+  backdrop-filter: blur(10vmax);
+}
+.footer{
+  background-image: url("/HypercolorGradient6.jpeg");
+}
+@keyframes rotate {
+  from {
+    rotate: 0deg;
+  }
+  
+  50% {
+    scale: 1 1.5;
+  }
+  
+  to {
+    rotate: 360deg;
+  }
+}
+
+#blob {
+  background-color: white;
+  height: 50vh; /* Cover the entire height of the screen */
+  width: 100vh; /* Maintain aspect ratio */
+  position: fixed; /* Use fixed position to ensure it stays within the viewport */
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  background: linear-gradient(to right, rgb(173, 7, 118), rgb(64, 5, 182));
+  animation: rotate 20s infinite;
+  opacity: 0.8;
+}
+
+.heading-links-text {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+}
+.anim-bg-gradient {
+  padding: 0.6em 1.2em;
+  border-radius: 0.375em;
+  cursor: pointer;
+  color: white;
+  background: linear-gradient(120deg, rgb(173, 7, 118), crimson, rgb(64, 5, 182));
+  background-size: 200% 100%;
+  background-position: 100% 0;
+  transition: background-position .5s;
+}
+.card-wrapper {
+  display: inline-block; /* Ensure the wrapper only takes the space of its content */
+  height: 500px;
+  overflow: hidden;
+}
+
+.card {
+  width: 350px;
+  height: 500px;
+  border-radius: 10px; /* Round the corners of the card */
+  position: relative; /* Position relative for absolute positioning of pseudo-element */
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: solid 3px; /* Define a solid border */
+  border-image: linear-gradient(120deg, rgb(173, 7, 118), crimson, rgb(64, 5, 182)) 1; /* Apply the gradient as a border image */
+  border-radius: inherit; /* Inherit border-radius from the parent element */
+}
+
+
+.anim-bg-gradient:hover {
+  background-position: 0 0;
+}
+ol, ul {
+  list-style: none;
+}
+li {
+  display: inline-block;
+  padding: 20px 0 20px;
+  vertical-align: middle;
+}
+.menu-items a:hover, .menu-items a:focus, .menu-items a:active {
+  color: white;
+  text-decoration: none;
+}
+.menu-items a {
+  text-decoration: none;
+  transition: color 0.1s, background-color 0.1s;
+}
+.menu-items a {
+  position: relative;
+  display: block;
+  transition: color 0.1s,background-color 0.1s,padding 0.2s ease-in;
+  color: white;
+}
+.menu-items a::before {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(120deg, rgb(173, 7, 118), crimson, rgb(64, 5, 182));
+  transform-origin: right top;
+  transform: scale(0, 1);
+  transition: color 0.1s,transform 300ms ease-out;
+}
+a:active::before {
+  background-color: white;
+}
+a:hover::before, a:focus::before {
+  transform-origin: left top;
+  transform: scale(1, 1);
+}
+/* Hide default scrollbar */
+.MuiAvatar-colorDefault{
+  width: 70px !important;
+  height: 70px !important;
+}
+.commentBox{
+  background: linear-gradient(120deg, rgb(173, 7, 118), crimson, rgb(64, 5, 182));
+}
