@@ -3,9 +3,15 @@ import Header from './Header'
 import { AvatarGroup, Avatar } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import { Link } from 'react-router-dom';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import XIcon from '@mui/icons-material/X';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import { useNavigate } from 'react-router-dom';
 function AnotherHome() {
+    const navigate = useNavigate()
     const [activeTestimonial, setactiveTestimonial] = useState(0);
     const [opacity, setOpacity] = useState(1);
+    const [Fragment, setFragment] = useState("#home");
 
     const testimonials = [
         {
@@ -65,15 +71,77 @@ function AnotherHome() {
             window.onpointermove = null; // Cleanup event listener on component unmount
         };
     }, []);
+    useEffect(() => {
+        // Function to set height
+        function setHeight() {
+            var mainCanvasHeight = document.querySelector('.main-canvas-another').offsetHeight;
+            var blurDiv = document.getElementById('blur');
+            blurDiv.style.height = mainCanvasHeight + 'px';
+        }
+    
+        // Set height when component mounts
+        setHeight();
+    
+        // Set height when user navigates between pages
+        window.addEventListener('hashchange', setHeight);
+    
+        // Set height when device height changes (e.g., orientation change)
+        window.addEventListener('resize', setHeight);
+    
+        // Cleanup function
+        return () => {
+            // Remove event listeners to avoid memory leaks
+            window.removeEventListener('hashchange', setHeight);
+            window.removeEventListener('resize', setHeight);
+        };
+    }, []);
+    
+    useEffect(() => {
+        const container = document.querySelector(".tilt");
+        const image = container.querySelector("img");
+
+        container.addEventListener("mouseenter", () => {
+            container.addEventListener("mousemove", tilt);
+        });
+
+        container.addEventListener("mouseleave", () => {
+            container.removeEventListener("mousemove", tilt);
+            container.style.transform = "perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)";
+            image.style.transform = "rotateY(0deg) rotateX(0deg)";
+        });
+
+        function tilt(event) {
+            const { top, bottom, left, right } = container.getBoundingClientRect();
+
+            const middleX = (right - left) / 2;
+            const middleY = (bottom - top) / 2;
+
+            const clientX = event.clientX;
+            const clientY = event.clientY;
+
+            const offsetX = (clientX - left - middleX) / middleX;
+            const offsetY = (middleY - clientY + top) / middleY;
+
+            container.style.transform = `perspective(1000px) rotateY(${offsetX * 15}deg) rotateX(${offsetY * 15}deg) scale3d(1, 1, 1)`;
+            image.style.transform = `rotateY(${-offsetX * 15}deg) rotateX(${-offsetY * 15}deg)`;
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!Fragment) {
+            return
+        }
+        document.querySelector(`${Fragment}`).scrollIntoView()
+
+    }, [Fragment]);
     return (
-        <div className='main-canvas-another flex items-center h-[auto] w-full flex-col'>
-            <div id="blur"></div>
-            <Header />
-            <div className='flex flex-row h-[calc(100vh-15vh)] w-full items-center z-[9999]'>
+        <div className='main-canvas-another flex items-center h-auto overflow-hidden w-full flex-col'>
+            <Header setFragment={setFragment} />
+            <div id='home' className='flex flex-row h-[calc(100vh-15vh)] w-full items-center z-[9999]'>
                 <div className='flex w-full flex-col pl-[150px] gap-10'>
                     <h1 className=' text-5xl text-white pb-4'>We develop things here.</h1>
                     <div className=' w-full flex'>
-                        <button className=' reset anim-bg-gradient w-[150px] h-[50px]'>About us</button>
+                        <button onClick={()=>{setFragment("#about")}} className=' reset anim-bg-gradient w-[150px] h-[50px]'>About us</button>
                     </div>
                 </div>
                 <div className=' relative right-[-100px]'>
@@ -81,8 +149,12 @@ function AnotherHome() {
                 </div>
             </div>
             <div id="blob"></div>
+            <div id="blur">
 
-            <div className='h-[200vh] w-full z-[9999] overflow-hidden'>
+            </div>
+
+            <div className='h-auto w-full z-[9999] overflow-hidden  ' id='services'>
+                <div className="blur"></div>
                 <h1 className='text-center text-white text-4xl pb-2'> Our Services</h1>
                 <div className='flex w-full h-full'>
                     <div className='flex flex-col gap-5 w-full mt-6 h-auto'>
@@ -98,8 +170,8 @@ function AnotherHome() {
                                         Empowering your brand with sleek and intuitive mobile apps for e-commerce, business, and portfolio needs. Engage users on the go with seamless experiences that drive results.
                                     </p>
                                     <div className=' w-full flex flex-col gap-3 items-center justify-center h-[20vh] mt-4 relative'>
-                                        <button className=' reset anim-bg-gradient w-[150px] h-[50px]'>Testimonials</button>
-                                        <button className=' reset anim-bg-gradient w-[150px] h-[50px]'>Get a quote</button>
+                                        <button onClick={()=>{setFragment("#testimonials")}} className=' reset anim-bg-gradient w-[150px] h-[50px]'>Testimonials</button>
+                                        <button  onClick={()=>{navigate("/quote")}} className=' reset anim-bg-gradient w-[150px] h-[50px]'>Get a quote</button>
                                     </div>
                                 </div>
                             </div>
@@ -114,8 +186,8 @@ function AnotherHome() {
                                         Crafting immersive web experiences tailored for e-commerce, business, landing, and portfolio pages. Elevate your online presence with designs that captivate and convert.
                                     </p>
                                     <div className=' w-full flex flex-col items-center gap-3 mt-4 relative'>
-                                        <button className=' reset anim-bg-gradient w-[150px] h-[50px]'>Testimonials</button>
-                                        <button className=' reset anim-bg-gradient w-[150px] h-[50px]'>Get a quote</button>
+                                        <button onClick={()=>{setFragment("#testimonials")}} className=' reset anim-bg-gradient w-[150px] h-[50px]'>Testimonials</button>
+                                        <button  onClick={()=>{navigate("/quote")}} className=' reset anim-bg-gradient w-[150px] h-[50px]'>Get a quote</button>
                                     </div>
                                 </div>
                             </div>
@@ -127,14 +199,14 @@ function AnotherHome() {
                                     </div>
                                     <p className='text-white'>Empower your brand with captivating graphic designs, from striking thumbnails to timeless logos. Elevate your visual identity with our creative expertise.</p>
                                     <div className=' w-full flex flex-col items-center justify-center gap-3  h-[20vh] mt-4 relative'>
-                                        <button className=' reset anim-bg-gradient w-[150px] h-[50px]'>Testimonials</button>
-                                        <button className=' reset anim-bg-gradient w-[150px] h-[50px]'>Get a quote</button>
+                                        <button onClick={()=>{setFragment("#testimonials")}} className=' reset anim-bg-gradient w-[150px] h-[50px]'>Testimonials</button>
+                                        <button  onClick={()=>{navigate("/quote")}} className=' reset anim-bg-gradient w-[150px] h-[50px]'>Get a quote</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className='w-full flex justify-center'>
-                            <div class="card-wrapper">
+                            <div class="card-wrapper ">
                                 <div class="card">
                                     <div className='flex flex-row items-center gap-10'>
                                         <h1 className=' text-white text-2xl'>Marketing</h1>
@@ -142,9 +214,9 @@ function AnotherHome() {
                                     </div>
                                     <p className='text-white'>Elevate your brand's presence with our dynamic marketing solutions. From strategic campaigns to targeted ads, we drive engagement and boost conversions across platforms, ensuring your message reaches the right audience at the right time.
                                     </p>
-                                    <div className=' w-full flex flex-col items-center justify-center gap-3  h-[20vh] mt-4 relative'>
-                                        <button className=' reset anim-bg-gradient w-[150px] h-[50px]'>Testimonials</button>
-                                        <button className=' reset anim-bg-gradient w-[150px] h-[50px]'>Get a quote</button>
+                                    <div className=' w-full flex flex-col items-center justify-center gap-3  h-[20vh] mt-2 relative '>
+                                        <button onClick={()=>{setFragment("#testimonials")}} className=' reset anim-bg-gradient w-[150px] h-[50px]'>Testimonials</button>
+                                        <button  onClick={()=>{navigate("/quote")}} className=' reset anim-bg-gradient w-[150px] h-[50px]'>Get a quote</button>
                                     </div>
                                 </div>
                             </div>
@@ -152,8 +224,8 @@ function AnotherHome() {
                     </div>
                 </div>
             </div>
-            <div className='h-[100vh] overflow-hidden z-[9999] mt-10'>
-                <article className=' pl-20 mt-10 w-[60%]'>
+            <div className='h-auto overflow-hidden flex flex-row z-[9999] mt-10' id='about'>
+                <article className=' pl-20 mt-10 w-full'>
                     <h1 className='text-5xl pb-2 text-white'>About us</h1>
                     <h2 className='text-2xl pb-2 text-white mt-2'>Introducing IcySolutions: Your Innovation Partners!</h2>
                     <p className=' text-justify text-white text-xl mt-2'>
@@ -164,8 +236,13 @@ function AnotherHome() {
                         Driven by a relentless pursuit of excellence, we're committed to delivering cutting-edge solutions that not only meet but exceed your expectations. Whether you're a startup looking to disrupt the market or an established enterprise aiming to stay ahead of the curve, we have the skills and expertise to turn your vision into reality. From conceptualization to execution, we're with you every step of the way, ensuring seamless collaboration and unparalleled results. With IcySolutions as your innovation partner, the future is yours to shape.
                     </p>
                 </article>
+                <div className='w-full flex justify-center items-center'>
+                    <div className='w-[300px] absolute logo-home h-[300px] border-[1px] border-transparent rounded-full flex justify-center items-center tilt'>
+                        <img src='/logo2.png' height={150} width={150} />
+                    </div>
+                </div>
             </div>
-            <div className='h-[auto] w-full z-[9999] mt-10'>
+            <div className='h-[auto] w-full z-[9999] mt-10' id='team'>
                 <h1 className='text-5xl text-white text-center pb-2'>Team</h1>
                 <div className='flex flex-col gap-10'>
                     <div>
@@ -294,7 +371,7 @@ function AnotherHome() {
                     </div>
                 </div>
             </div>
-            <div className='h-auto mt-10 w-full z-[9999]'>
+            <div className='h-auto mt-10 w-full z-[9999]' id='testimonials'>
                 <h1 className=' text-center text-5xl text-white'>Our Clients</h1>
                 <div className='w-full flex flex-col items-center mt-10'>
                     <AvatarGroup total={24}>
@@ -330,7 +407,7 @@ function AnotherHome() {
                     </div>
                 </div>
             </div>
-            <div className='h-screen w-full flex flex-row z-[9999]'>
+            <div className='h-screen w-full flex flex-row z-[9999]' id='contact'>
                 <div className='text-white italic w-full text-5xl flex justify-center items-center'>Let's Talk</div>
                 <div className=' text-white flex w-full flex-col justify-center'>
                     <div className='flex flex-col gap-5'>
@@ -344,7 +421,7 @@ function AnotherHome() {
                         </div>
                         <div className='flex flex-col gap-3'>
                             <h1 className='text-2xl'>Message</h1>
-                            <textarea placeholder='Enter your message' className='w-[80%] h-[55px]  border-white text-lg bg-transparent border-t-0 border-r-0 border-b-2 border-l-0 pl-3 placeholder:text-white min-h-[200px] p-5 outline-none' />
+                            <textarea id='message' placeholder='Enter your message' className='w-[80%] h-[55px]  border-white text-lg bg-transparent border-t-0 border-r-0 border-b-2 border-l-0 pl-3 placeholder:text-white p-5 outline-none' />
                         </div>
                         <div className=' flex w-[80%] mt-5 justify-center items-center'>
                             <button className=' reset anim-bg-gradient w-[150px] h-[50px]'>Submit</button>
@@ -352,35 +429,40 @@ function AnotherHome() {
                     </div>
                 </div>
             </div>
-            <div className='h-[80vh] footer w-full pb-10'>
+            <div className='h-auto w-full pb-10 z-[9999]'>
                 <div className='flex flex-col w-full'>
                     <div className='flex flex-row w-full justify-between'>
                         <div className=' flex justify-center w-full items-center'>
-                        <h1 className='text-3xl text-white'>Let's connect and <br/>bring your dream website to life!</h1>
+                            <h1 className='text-3xl text-white'>Let's connect and <br />bring your dream website to life!</h1>
                         </div>
                         <div className=' w-full flex justify-center items-center'>
-                        <img src='/logo2.png' width={500} height={500} />
+                            <img src='/logo2.png' width={150} height={150} />
                         </div>
                     </div>
                     <div className='flex flex-row'>
                         <div className='flex flex-col w-full'>
-                            <div className='flex flex-row items-center'>
-                            <img src='/logo2.png' width={300} height={300} />
-                            <h1 className='text-white text-2xl font-bold text-left'>Icy Solutions</h1>
+                            <div className='flex flex-row items-center justify-center'>
+                                <img src='/logo2.png' width={70} height={70} />
+                                <h1 className='text-white text-2xl font-bold text-left'>Icy Solutions</h1>
                             </div>
                             <h1 className='text-white   text-center '>
-                                Make the right decision for your buisness with us!
+                                Make the right decision for <br />your buisness with us!
                             </h1>
                         </div>
-                        <div className='flex flex-col w-full items-center'>
+                        <div className='flex flex-col w-full items-center justify-center'>
                             <div className='flex flex-col'>
-                            <Link className='text-slate-600 bold text-lg hover:text-white'>get a quote</Link>
-                            <Link className='text-slate-600 bold text-lg hover:text-white'>privacy policy</Link>
-                            <Link className=' text-slate-600 bold text-lg hover:text-white'>cookies policy</Link>
+                                <Link className='text-[#6E6E6E]  text-lg hover:text-white'>get a quote</Link>
+                                <Link className='text-[#6E6E6E]  text-lg hover:text-white'>privacy policy</Link>
+                                <Link className=' text-[#6E6E6E]  text-lg  hover:text-white'>cookies policy</Link>
                             </div>
                         </div>
-                        <div className='w-full'>
-                            <h1>hi</h1>
+                        <div className='w-full flex flex-col gap-5 justify-center pl-10'>
+                            <h1 className='text-[#6E6E6E] text-2xl font-bold'>Let's Connect</h1>
+                            <div className='flex flex-row gap-5'>
+                                <InstagramIcon sx={{ color: "gray", fontSize: 40 }} />
+                                <XIcon sx={{ color: "gray", fontSize: 40 }} />
+                                <FacebookIcon sx={{ color: "gray", fontSize: 40 }} />
+                            </div>
                         </div>
                     </div>
                 </div>
