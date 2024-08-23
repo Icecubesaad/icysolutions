@@ -17,30 +17,34 @@ function AnotherHome() {
     {
       name: "Ittefaq Electronics",
       description:
-        "Provided excellent service and top-notch products. Highly recommend!",
+        "Exceptional service, exceeded expectations in every way!",
       place: "Lahore, Pakistan",
       id: 412,
+      image:"/bilal.jpg"
     },
     {
       name: "Uplift",
       description:
-        "Outstanding experience working with the team. They delivered beyond expectations!",
+        "Innovative solutions that drove real results. Thanks!",
       place: "India",
       id: 4124,
+      image:"/anita.jpeg"
     },
     {
-      name: "Talha",
+      name: "andres jhiva",
       description:
-        "Amazing service! Helped us achieve our goals effectively. Will definitely work with them again.",
+        "Seamless collaboration, outstanding outcome, and a pleasure to work with. Five stars!",
       place: "Los Angeles",
       id: 421,
+      image:"/andres.jpeg"
     },
     {
-      name: "Talha",
+      name: "andria lim",
       description:
-        "Came back for another project, and once again, they exceeded our expectations. Highly recommended!",
+        "Efficient, reliable, and highly recommended. Their expertise saved us time and resources.",
       place: "Los Angeles",
       id: 425,
+      image:"/adria.jpeg"
     },
   ];
   useEffect(() => {
@@ -705,8 +709,8 @@ function AnotherHome() {
             style={commentStyle}
           >
             <div className="flex flex-row gap-5 items-center">
-              <div className=" border-[1px] rounded-full">
-                <img src="/images.jpeg" height={50} width={50} alt="image" />
+              <div className=" border-[1px] rounded-full h-[50px] w-[50px] flex justify-center items-center">
+                <img src={testimonials[activeTestimonial].image} height={50} width={50} style={{transform: "Scale(2)"}} alt="image" />
               </div>
               <div className="text-xl">
                 {testimonials[activeTestimonial].name}
