@@ -20,7 +20,7 @@ function AnotherHome() {
         "Exceptional service, exceeded expectations in every way!",
       place: "Lahore, Pakistan",
       id: 412,
-      image:"/bilal.jpg"
+      image:"/ittefaq.jpeg"
     },
     {
       name: "Uplift",
