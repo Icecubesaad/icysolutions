@@ -9,62 +9,73 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import { useNavigate } from "react-router-dom";
 function AnotherHome() {
   const navigate = useNavigate();
-  const [activeTestimonial, setactiveTestimonial] = useState(0);
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [opacity, setOpacity] = useState(1);
   const [Fragment, setFragment] = useState("#home");
-
+  const [pictureSize, setPictureSize] = useState(150);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const testimonials = [
     {
       name: "Ittefaq Electronics",
-      description:
-        "Exceptional service, exceeded expectations in every way!",
+      description: "Exceptional service, exceeded expectations in every way!",
       place: "Lahore, Pakistan",
       id: 412,
-      image:"/ittefaq.jpeg"
+      image: "/ittefaq.jpeg"
     },
     {
       name: "Uplift",
-      description:
-        "Innovative solutions that drove real results. Thanks!",
+      description: "Innovative solutions that drove real results. Thanks!",
       place: "India",
       id: 4124,
-      image:"/anita.jpeg"
+      image: "/anita.jpeg"
     },
     {
       name: "andres jhiva",
-      description:
-        "Seamless collaboration, outstanding outcome, and a pleasure to work with. Five stars!",
+      description: "Seamless collaboration, outstanding outcome, and a pleasure to work with. Five stars!",
       place: "Los Angeles",
       id: 421,
-      image:"/andres.jpeg"
+      image: "/andres.jpeg"
     },
     {
       name: "andria lim",
-      description:
-        "Efficient, reliable, and highly recommended. Their expertise saved us time and resources.",
+      description: "Efficient, reliable, and highly recommended. Their expertise saved us time and resources.",
       place: "Los Angeles",
       id: 425,
-      image:"/adria.jpeg"
+      image: "/adria.jpeg"
     },
   ];
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
-      // Increment activeTestimonial after every 5 seconds
       setOpacity(0);
       setTimeout(() => {
-        setactiveTestimonial(
+        setActiveTestimonial(
           (prevActive) => (prevActive + 1) % testimonials.length
         );
         setOpacity(1);
-      }, 1200); // Delay to ensure transition starts after opacity is set to 0
+      }, 1200);
     }, 5000);
 
     return () => clearInterval(interval);
   }, [testimonials.length]);
+
   const commentStyle = {
     transition: "opacity 0.5s",
     opacity: opacity,
   };
+
   useEffect(() => {
     const blob = document.getElementById("blob");
 
@@ -81,31 +92,33 @@ function AnotherHome() {
     };
 
     return () => {
-      window.onpointermove = null; // Cleanup event listener on component unmount
+      window.onpointermove = null;
     };
   }, []);
   useEffect(() => {
-    // Function to set height
+    if(windowWidth<700){
+      setPictureSize(80)
+    }
+    else{
+      setPictureSize(150)
+    }
+  }, [windowWidth]);
+
+  useEffect(() => {
     function setHeight() {
-      var mainCanvasHeight = document.querySelector(
+      const mainCanvasHeight = document.querySelector(
         ".main-canvas-another"
       ).offsetHeight;
-      var blurDiv = document.getElementById("blur");
+      const blurDiv = document.getElementById("blur");
       blurDiv.style.height = mainCanvasHeight + "px";
     }
 
-    // Set height when component mounts
     setHeight();
 
-    // Set height when user navigates between pages
     window.addEventListener("hashchange", setHeight);
-
-    // Set height when device height changes (e.g., orientation change)
     window.addEventListener("resize", setHeight);
 
-    // Cleanup function
     return () => {
-      // Remove event listeners to avoid memory leaks
       window.removeEventListener("hashchange", setHeight);
       window.removeEventListener("resize", setHeight);
     };
@@ -128,13 +141,10 @@ function AnotherHome() {
 
     function tilt(event) {
       const { top, bottom, left, right } = container.getBoundingClientRect();
-
       const middleX = (right - left) / 2;
       const middleY = (bottom - top) / 2;
-
       const clientX = event.clientX;
       const clientY = event.clientY;
-
       const offsetX = (clientX - left - middleX) / middleX;
       const offsetY = (middleY - clientY + top) / middleY;
 
@@ -154,15 +164,15 @@ function AnotherHome() {
     document.querySelector(`${Fragment}`).scrollIntoView();
   }, [Fragment]);
   return (
-    <div className="main-canvas-another flex items-center h-auto overflow-hidden w-full flex-col">
+    <div className="main-canvas-another flex items-center h-auto overflow-hidden flex-col">
       <Header setFragment={setFragment} />
       <div
         id="home"
         className="flex flex-row h-[calc(100vh-15vh)] w-full items-center z-[9999]"
       >
-        <div className="flex w-full flex-col pl-[150px] gap-10">
-          <h1 className=" text-5xl text-white pb-4">We develop things here.</h1>
-          <div className=" w-full flex">
+        <div className="flex w-full flex-col md:items-start items-center md:pl-[150px] gap-10">
+          <h1 className=" text-5xl text-center md:text-balance text-white pb-4">We develop things here.</h1>
+          <div className=" w-full flex justify-center md:justify-start">
             <button
               onClick={() => {
                 setFragment("#about");
@@ -173,7 +183,7 @@ function AnotherHome() {
             </button>
           </div>
         </div>
-        <div className=" relative right-[-100px]">
+        <div className=" relative right-[-100px] hidden md:flex">
           <img
             className="border-[1px] border-transparent rounded-xl"
             src="/website.png"
@@ -190,7 +200,7 @@ function AnotherHome() {
         <h1 className="text-center text-white text-4xl pb-2"> Our Services</h1>
         <div className="flex w-full h-full">
           <div className="flex flex-col gap-5 w-full mt-6 h-auto">
-            <div className="flex flex-row gap-24 w-full justify-center h-auto">
+            <div className="flex flex-col md:flex-row gap-24 w-full items-center md:items-start justify-center h-auto">
               <div class="card-wrapper">
                 <div class="card">
                   <div className="flex flex-row items-center">
@@ -253,20 +263,13 @@ function AnotherHome() {
                       </g>
                     </svg>
                   </div>
-                  <p className="text-white">
+                  <p className="text-white mt-3 text-xl">
                     Empowering your brand with sleek and intuitive mobile apps
                     for e-commerce, business, and portfolio needs. Engage users
                     on the go with seamless experiences that drive results.
                   </p>
-                  <div className=" w-full flex flex-col gap-3 items-center justify-center h-[20vh] mt-4 relative">
-                    <button
-                      onClick={() => {
-                        setFragment("#testimonials");
-                      }}
-                      className=" reset anim-bg-gradient w-[150px] h-[50px]"
-                    >
-                      Testimonials
-                    </button>
+                  <div className=" w-full flex flex-col gap-3 items-center justify-center lg:h-[20vh] h-[10vh]  mt-4 relative">
+                    
                     <button
                       onClick={() => {
                         navigate("/quote");
@@ -288,8 +291,8 @@ function AnotherHome() {
                     </h1>
                     <svg
                       fill="#ffffff"
-                      height={150}
-                      width={100}
+                      height={pictureSize}
+                      width={pictureSize}
                       version="1.1"
                       id="Ebene_1"
                       xmlns="http://www.w3.org/2000/svg"
@@ -320,20 +323,13 @@ function AnotherHome() {
                       </g>
                     </svg>
                   </div>
-                  <p className="text-white">
+                  <p className="text-white mt-3 text-xl">
                     Crafting immersive web experiences tailored for e-commerce,
                     business, landing, and portfolio pages. Elevate your online
                     presence with designs that captivate and convert.
                   </p>
-                  <div className=" w-full flex flex-col items-center gap-3 mt-4 relative">
-                    <button
-                      onClick={() => {
-                        setFragment("#testimonials");
-                      }}
-                      className=" reset anim-bg-gradient w-[150px] h-[50px]"
-                    >
-                      Testimonials
-                    </button>
+                  <div className="lg:h-[20vh] h-[10vh] w-full flex flex-col items-center gap-3 mt-4 relative">
+                    
                     <button
                       onClick={() => {
                         navigate("/quote");
@@ -355,8 +351,8 @@ function AnotherHome() {
                     </h1>
                     <svg
                       fill="#ffffff"
-                      height={150}
-                      width={100}
+                      height={pictureSize}
+                      width={pictureSize}
                       version="1.1"
                       id="Capa_1"
                       xmlns="http://www.w3.org/2000/svg"
@@ -396,20 +392,13 @@ function AnotherHome() {
                       </g>
                     </svg>
                   </div>
-                  <p className="text-white">
+                  <p className="text-white mt-3 text-xl">
                     Empower your brand with captivating graphic designs, from
                     striking thumbnails to timeless logos. Elevate your visual
                     identity with our creative expertise.
                   </p>
-                  <div className=" w-full flex flex-col items-center justify-center gap-3  h-[20vh] mt-4 relative">
-                    <button
-                      onClick={() => {
-                        setFragment("#testimonials");
-                      }}
-                      className=" reset anim-bg-gradient w-[150px] h-[50px]"
-                    >
-                      Testimonials
-                    </button>
+                  <div className=" w-full flex flex-col items-center justify-center gap-3  lg:h-[20vh] h-[10vh] mt-4 relative">
+                    
                     <button
                       onClick={() => {
                         navigate("/quote");
@@ -429,8 +418,8 @@ function AnotherHome() {
                     <h1 className=" text-white text-2xl">Marketing</h1>
                     <svg
                       fill="#ffffff"
-                      height={150}
-                      width={100}
+                      height={pictureSize}
+                      width={pictureSize}
                       version="1.0"
                       id="Layer_1"
                       xmlns="http://www.w3.org/2000/svg"
@@ -451,22 +440,15 @@ function AnotherHome() {
                       </g>
                     </svg>
                   </div>
-                  <p className="text-white">
+                  <p className="text-white mt-3 text-xl">
                     Elevate your brand's presence with our dynamic marketing
                     solutions. From strategic campaigns to targeted ads, we
                     drive engagement and boost conversions across platforms,
                     ensuring your message reaches the right audience at the
                     right time.
                   </p>
-                  <div className=" w-full flex flex-col items-center justify-center gap-3  h-[20vh] mt-2 relative ">
-                    <button
-                      onClick={() => {
-                        setFragment("#testimonials");
-                      }}
-                      className=" reset anim-bg-gradient w-[150px] h-[50px]"
-                    >
-                      Testimonials
-                    </button>
+                  <div className=" w-full flex flex-col items-center justify-center gap-3  lg:h-[20vh] h-[10vh] mt-2 relative ">
+                    
                     <button
                       onClick={() => {
                         navigate("/quote");
@@ -486,12 +468,12 @@ function AnotherHome() {
         className="h-auto overflow-hidden flex flex-row z-[9999] mt-10"
         id="about"
       >
-        <article className=" pl-20 mt-10 w-full">
-          <h1 className="text-5xl pb-2 text-white">About us</h1>
+        <article className=" md:pl-20 mt-10 w-full pl-3 pr-3">
+          <h1 className="text-5xl w-full md:text-balance text-center pb-2 text-white">About us</h1>
           <h2 className="text-2xl pb-2 text-white mt-2">
             Introducing IcySolutions: Your Innovation Partners!
           </h2>
-          <p className=" text-justify text-white text-xl mt-2">
+          <p className=" text-justify text-white text-xl mt-2 ">
             At IcySolutions, we believe in pushing the boundaries of possibility
             and redefining what's achievable in the digital realm. With a year
             of dedicated service in the industry, we've honed our expertise to
@@ -511,8 +493,8 @@ function AnotherHome() {
             shape.
           </p>
         </article>
-        <div className="w-full flex justify-center items-center">
-          <div className="w-[300px] absolute logo-home h-[300px] border-[1px] border-transparent rounded-full flex justify-center items-center tilt">
+        <div className="w-full hidden justify-center items-center md:flex">
+          <div className="w-[300px] absolute logo-home h-[300px] border-[1px] border-transparent rounded-full justify-center items-center tilt  ">
             <img src="/logo2.png" height={150} width={150} />
           </div>
         </div>
@@ -521,10 +503,10 @@ function AnotherHome() {
         <h1 className="text-5xl text-white text-center pb-2">Team</h1>
         <div className="flex flex-col gap-10">
           <div>
-            <h1 className="text-3xl text-white pb-2 pl-16 mt-5">
+            <h1 className="text-3xl text-white pb-2 text-center md:pl-16 mt-5">
               Web Developers
             </h1>
-            <div className="flex flex-row gap-24 mt-5 w-full justify-center h-auto">
+            <div className="flex md:items-start items-center flex-col md:flex-row gap-24 mt-5 w-full justify-center h-auto">
               <div class="card-wrapper">
                 <div class="card pt-10">
                   <div className="flex flex-row justify-between items-center gap-10 h-[100px]">
@@ -545,7 +527,7 @@ function AnotherHome() {
                       </div>
                     </div>
                   </div>
-                  <p className="text-white mt-10">
+                  <p className="text-white mt-10 text-xl">
                     I am the CEO of IcySolutions and a full-stack developer with
                     3 years of experience. With a strong technical background
                     and a passion for innovation, I lead the company to deliver
@@ -573,7 +555,7 @@ function AnotherHome() {
                       </div>
                     </div>
                   </div>
-                  <p className="text-white mt-5">
+                  <p className="text-white mt-5 text-xl">
                     I am the Co-Founder and Marketing Executive of IcySolutions,
                     with a strong marketing background and a passion for
                     innovation. I lead the company's marketing strategy,
@@ -601,7 +583,7 @@ function AnotherHome() {
                       </div>
                     </div>
                   </div>
-                  <p className="text-white mt-5">
+                  <p className="text-white mt-5 text-xl">
                     Graphic Designer and Video Editor at IcySolutions, with a
                     keen creative eye and passion for visual storytelling,
                     crafting stunning designs, editing compelling videos, and
@@ -613,7 +595,7 @@ function AnotherHome() {
             </div>
           </div>
           <div>
-            <div className="flex flex-row gap-24 mt-5 w-full justify-center h-auto">
+            <div className="flex items-center md:items-start flex-col md:flex-row gap-24 mt-5 w-full justify-center h-auto">
               <div class="card-wrapper">
                 <div class="card pt-10">
                   <div className="flex flex-row justify-between items-center gap-10 h-[100px]">
@@ -732,27 +714,27 @@ function AnotherHome() {
           </div>
         </div>
       </div>
-      <div className="h-screen w-full flex flex-row z-[9999]" id="contact">
-        <div className="text-white italic w-full text-5xl flex justify-center items-center">
+      <div className="h-screen w-full flex flex-col md:flex-row z-[9999]" id="contact">
+        <div className="text-white  italic w-full text-5xl flex justify-center items-center">
           Let's Talk
         </div>
-        <div className=" text-white flex w-full flex-col justify-center">
-          <div className="flex flex-col gap-5">
-            <div className="flex flex-col gap-3">
+        <div className=" text-white items-center mt-20 md:mt-0 md:items-start flex w-full flex-col justify-center">
+          <div className="flex flex-col md:items-start items-center gap-5 w-full">
+            <div className="flex flex-col w-full items-center md:items-start gap-3">
               <h1 className="text-2xl">Name</h1>
               <input
                 placeholder="Enter your name"
                 className="w-[80%] h-[55px] border-t-0 border-r-0 border-b-2 border-l-0 border-white bg-transparent text-lg  pl-3 placeholder:text-white outline-none"
               />
             </div>
-            <div className="flex flex-col gap-3">
+            <div className="flex items-center md:items-start w-full flex-col gap-3">
               <h1 className="text-2xl">Email</h1>
               <input
                 placeholder="Enter your email"
                 className="w-[80%] h-[55px]  border-white bg-transparent text-lg border-t-0 border-r-0 border-b-2 border-l-0 pl-3 placeholder:text-white outline-none"
               />
             </div>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 items-center md:items-start w-full">
               <h1 className="text-2xl">Message</h1>
               <textarea
                 id="message"
@@ -782,7 +764,7 @@ function AnotherHome() {
             </div>
           </div>
           <div className="flex flex-row">
-            <div className="flex flex-col w-full">
+            <div className="hidden md:flex flex-col w-full">
               <div className="flex flex-row items-center justify-center">
                 <img src="/logo2.png" width={70} height={70} />
                 <h1 className="text-white text-2xl font-bold text-left">
@@ -794,7 +776,7 @@ function AnotherHome() {
                 your buisness with us!
               </h1>
             </div>
-            <div className="flex flex-col w-full items-center justify-center">
+            <div className="hidden md:flex flex-col w-full items-center justify-center">
               <div className="flex flex-col">
                 <Link className="text-[#6E6E6E]  text-lg hover:text-white">
                   get a quote
